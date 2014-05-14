@@ -1,0 +1,61 @@
+PImage me;
+
+int x,y,moveX,moveY;
+
+
+  void setup(){
+   size(600,600);
+   background(0);
+   me=loadImage("k6_p2a.png");
+                               
+  x=width/2;
+  y=height-me.height;
+ }
+  
+  void draw(){
+    
+   background(0);
+ 
+   x+=moveX;
+   if(x<0) x=0; else if(x>width-me.width) x=width-me.width;
+   
+   y+=moveY;
+   if(y<0) y=0; else if(y>height-me.height) y=height-me.height;
+   
+   image(me,x,y);
+                                 //もしも壁に当たったラ
+  }
+  
+  void keyPressed() {
+    
+    println(keyCode);
+    switch (keyCode){
+      
+     case 37:
+     moveX = - 10;
+     break;
+     
+     case 38:
+     moveY =  -10;
+     break;
+     
+     case 39:
+     moveX = 10;
+     break;
+     
+     case 40:
+     moveY = 10;
+     break;
+   }
+   }
+   
+   
+   void keyReleased(){
+     
+     moveX = 0;
+     
+     moveY = 0;
+      
+      
+      
+  }
