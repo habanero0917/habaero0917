@@ -1,0 +1,8 @@
+background(5,300,400);
+size(600,600);
+for(int i=0; i<1500; i++){ 
+ stroke(random(255)); 
+ line(random(600), random(600), 
+ random(0), random(0)); 
+
+}
