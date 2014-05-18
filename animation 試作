@@ -1,0 +1,19 @@
+int x, y;
+void setup() {
+  size(700, 700);
+  frameRate(50);
+  background(0,0,0);
+}
+    
+void draw() {
+  stroke(mouseX,300,300,300);
+  line(x, 0, width - x, height);
+  x += 4;
+  line(0, y, width, height - y);
+  y += 4;
+  if (y > height) {
+    x = +350;
+    y = +350;
+  }
+}
+      
