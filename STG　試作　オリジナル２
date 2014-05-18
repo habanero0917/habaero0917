@@ -1,0 +1,76 @@
+PImage me;
+PImage pn;
+PImage me2;
+int x,y,moveX,moveY;
+float x1;
+final int BALL_SIZE = 20;  //  ボールの大きさ
+float y1 = 0;  //  ボールを描く位置
+
+
+  void setup()
+  {
+   size(600,600);
+   background(0);
+   me=loadImage("k6_p2a.png");
+   me2=loadImage("k6_p2b.png");
+   pn=loadImage("nc44722.png");                            
+   x=width/2;
+   y=height-me.height;
+   x1 = width / 2;  //  縦の真ん中を計算する
+  }
+  
+  void draw(){
+    
+   background(0);
+   
+   y1 += 3;
+ 
+   x += moveX;
+   if(x<0) x=0; else if(x>width-me.width) x=width-me.width;
+   
+   y += moveY;
+   if(y<0) y=0; else if(y>height-me.height) y=height-me.height;
+   
+   if(y1 > height)
+   {
+    y1 = 0;
+   }
+   
+   image(pn,0,0,600,600);
+   image(me2,x,y);
+   image(me,x,y);                             
+                                 //もしも壁に当たったラ
+   ellipse( x1, y1, BALL_SIZE, BALL_SIZE);                             
+                                 
+   }
+  
+  void keyPressed() {
+    
+    println(keyCode);
+    switch (keyCode){
+      
+     case 37:
+     moveX = - 10;
+     break;
+     
+     case 38:
+     moveY =  -10;
+     break;
+     
+     case 39:
+     moveX = 10;
+     break;
+     
+     case 40:
+     moveY = 10;
+     break;
+   }
+   }
+   
+   
+   void keyReleased()
+   {
+     moveX = 0;
+     
+     moveY = 0;
+   }
