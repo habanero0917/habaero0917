@@ -1,0 +1,29 @@
+int x,y;
+float a = 0;
+
+void setup()
+{
+size(1000,500);
+smooth();
+}
+
+void draw()
+{
+  background(random(1,255));
+  for( x = 0; x < 1100; x += 100){
+    for(y = 0; y < 600; y += 100){
+    
+
+    float r = random(256);
+    float g = random(256);
+    float b = random(256);
+    //float a = random(256);
+    fill(r,g,b,a);
+    triangle(x,100,x-50,y+a,x+50,y+a);
+  }
+}
+  a += 1;
+  if( a > 255 ){
+    a = 0;
+  }
+}
