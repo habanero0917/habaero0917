@@ -1,0 +1,27 @@
+int count = 1000;
+String kotoba = "Please stop me";
+void setup() {
+  size(500,500);
+}
+
+void draw() {
+  background(0);
+  textSize(100);
+  text(count,150,150);
+  count--;
+  
+  if(count == -1){
+    count += 1;
+  }
+  if(count <= 1000){
+    textSize(50);
+    text(kotoba,80,300);
+  }
+  if(count <= 100){
+    textSize(50);
+    kotoba = "It is not useful";
+    text(kotoba,80,300);
+  
+  }
+  
+}
