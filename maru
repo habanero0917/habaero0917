@@ -1,0 +1,55 @@
+class Ball{
+   float x;
+   float y;
+   color c;
+   float vx, vy;
+}
+
+
+ArrayList<Ball> balls;
+
+void setup() {
+ size(300,300);
+ balls = new  ArrayList<Ball>();
+ Ball ball;
+ 
+ for (int i = 0; i < 500; i++) {
+ ball = new Ball();
+ ball.x = random(width); ball.y = random(height);
+ ball.c = color(random(225), random(100), random(50));
+ ball.vx = random(-5,3); ball.vy = random(-5,3);
+ balls.add(ball);
+ 
+ 
+ }
+}
+ 
+ void draw() {
+   background(250);
+   int n = balls.size();
+   for (int i = 0; i < n; i++) {
+     Ball ball = balls.get(i);
+     fill(ball.c);
+     ellipse(ball.x, ball.y, 20,20);
+     ball.x -= ball.vx;
+     ball.y -= ball.vy;
+     
+     if(ball.x > 500) {
+       ball.x = random(150.150) ;
+        ball.c = color(random(0), random(0), random(0));
+       
+     }
+     
+     if(ball.y > 500) {
+       ball.y = random(0.300) ;
+       ball.c = color(random(225), random(255), random(255));
+       
+  }    
+  
+   if(ball.y == ball.x) {
+       ball.y = random(0.300) ;
+       ball.c = color(random(0), random(100), random(100));
+       
+  }    
+  }
+}
