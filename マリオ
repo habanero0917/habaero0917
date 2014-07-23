@@ -1,0 +1,328 @@
+//
+//  MyScene.m
+//  PhysicsStudy
+//
+//  Created by Takatoshi Masamori on 7/15/14.
+//  Copyright (c) 2014 hack keenly. All rights reserved.
+//
+
+#import "MyScene.h"
+
+@import AVFoundation;
+
+static const uint32_t marioCategory = 0x1 << 0;
+static const uint32_t blockCategory = 0x1 << 1;
+static const uint32_t plateCategory = 0x1 << 2;
+static const uint32_t frameCategory = 0x1 << 3;
+
+
+@implementation MyScene{
+    SKSpriteNode *mario;
+    SKLabelNode *button;
+}
+
+
+-(id)initWithSize:(CGSize)size {
+    if (self = [super initWithSize:size]) {
+        /* Setup your scene here */
+        
+        self.backgroundColor = [SKColor colorWithRed:0.15
+                                               green:0.15
+                                                blue:0.3
+                                               alpha:1.0];
+        
+        
+        self.physicsWorld.contactDelegate = self;
+        
+        
+        
+        //View
+        self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:self.frame];
+        self.physicsWorld.gravity = CGVectorMake(0, -9.8);
+        self.physicsBody.friction = 0;
+        self.physicsBody.restitution = 0;
+        self.physicsBody.categoryBitMask = frameCategory;
+        
+        
+        
+        //plate
+        SKShapeNode *plate = [SKShapeNode node];
+        CGPathRef  platePath = CGPathCreateWithRect(CGRectMake(self.size.width / 2 - 100,
+                                                               100,
+                                                               200,
+                                                               10), nil);
+        
+        plate.path = platePath;
+        
+        plate.fillColor = [SKColor colorWithRed:1
+                                          green:0
+                                           blue:0
+                                          alpha:1];
+        
+        plate.strokeColor = [SKColor colorWithRed:0
+                                            green:1
+                                             blue:0.2
+                                            alpha:0.8];
+        
+        
+        plate.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromPath:platePath];
+        plate.physicsBody.friction = 0;
+        plate.physicsBody.restitution = 0;
+        plate.physicsBody.categoryBitMask = plateCategory;
+        plate.physicsBody.node.name = @"Plate";
+
+        
+        [self addChild:plate];
+        
+        
+        
+        
+        //Test
+        //        SKShapeNode *plate2 = [SKShapeNode node];
+        //        CGPathRef  plate2Path = CGPathCreateWithRect(CGRectMake(self.size.width / 2 - 50,
+        //                                                               self.size.height / 2 + 100,
+        //                                                               100,
+        //                                                               100), nil);
+        //
+        //        plate2.path = plate2Path;
+        //
+        //        plate2.fillColor = [SKColor colorWithRed:1
+        //                                          green:0
+        //                                           blue:0
+        //                                          alpha:1];
+        //
+        //        plate2.strokeColor = [SKColor colorWithRed:0
+        //                                            green:1
+        //                                             blue:0.2
+        //                                            alpha:0.8];
+        //
+        //
+        //        plate2.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromPath:plate2Path];
+        //        plate2.physicsBody.friction = 0;
+        //        plate2.physicsBody.restitution = 0;
+        //
+        //        [self addChild:plate2];
+        //
+        //
+        //
+        //
+        //
+        //        SKLabelNode *label = [SKLabelNode labelNodeWithFontNamed:@""];
+        //
+        //        label.text = @"?";
+        //        label.fontSize = 50;
+        //        label.fontColor = [SKColor colorWithRed:0
+        //                                          green:1
+        //                                           blue:1
+        //                                          alpha:1];
+        //
+        //        label.position = CGPointMake(self.size.width / 2,
+        //                                     self.size.height / 2 + 130);
+        //
+        //        [self addChild:label];
+        
+        
+        
+        
+        
+        //Block
+        SKSpriteNode *block = [SKSpriteNode spriteNodeWithImageNamed:@"block"];
+        block.position = CGPointMake(self.size.width / 2,
+                                     self.size.height / 2 + 100);
+        
+        //self.block.size = CGSizeMake(30, 30);
+        //        block.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:
+        //                                  CGRectMake(block.frame.size.width / 2,
+        //                                             block.frame.size.height / 2,
+        //                                             block.frame.size.width,
+        //                                             block.frame.size.height)];
+        block.xScale = 0.4;
+        block.yScale = 0.4;
+        block.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:block.frame.size];
+        block.physicsBody.dynamic = NO;
+        
+        block.physicsBody.restitution = 1;
+         //block.zPosition = 1;
+        block.physicsBody.categoryBitMask = blockCategory;
+        block.physicsBody.node.name = @"Block";
+       
+        
+        [self addChild:block];
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        //Sprite
+        mario = [SKSpriteNode spriteNodeWithImageNamed:@"mario"];
+        
+        mario.position = CGPointMake(self.size.width / 2,
+                                     self.size.height / 2);
+        mario.xScale = 0.2;
+        mario.yScale = 0.2;
+        mario.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:mario.size];
+        mario.physicsBody.affectedByGravity = YES;
+        mario.physicsBody.allowsRotation = NO;
+        //floatingRocket.physicsBody.mass = 0.1; //質量
+        //self.floatingRocket.physicsBody.density = 0.1; //密度
+        mario.physicsBody.friction = 0;
+        mario.physicsBody.restitution = 0;
+        mario.physicsBody.linearDamping = 0;
+        //floatingRocket.zPosition = 1;
+        mario.physicsBody.node.name = @"Mario";
+        mario.physicsBody.categoryBitMask = marioCategory;
+        
+        //        接触できるオブジェクト
+        mario.physicsBody.contactTestBitMask = plateCategory | blockCategory;
+        
+        //        接触を通知するオブジェクト
+        mario.physicsBody.contactTestBitMask = plateCategory | blockCategory;
+        
+        
+        
+        [self addChild:mario];
+        
+        
+        
+        
+        
+        //JumpButton
+        button = [SKLabelNode labelNodeWithFontNamed:@"Helvetica"];
+        button.text = @"Jump";
+        button.fontSize = 40;
+        button.position = CGPointMake(self.size.width / 2 ,
+                                      30);
+        [self addChild:button];
+        
+        
+        
+        
+        
+    }
+    return self;
+}
+
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    /* Called when a touch begins */
+    
+    for (UITouch *touch in touches) {
+        CGPoint location = [touch locationInNode:self];
+        
+         [self runAction:[SKAction playSoundFileNamed:@"jump.mp3" waitForCompletion:NO]];
+        
+        
+        
+        
+        
+        
+        SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithImageNamed:@"mario"];
+        
+        sprite.position = location;
+        
+        //sprite.size = CGSizeMake(10, 10);
+        sprite.xScale = 0.1;
+        sprite.yScale = 0.1;
+        
+        sprite.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:sprite.size];
+        sprite.physicsBody.affectedByGravity = NO;
+        sprite.physicsBody.linearDamping = 0; //空気抵抗
+        sprite.physicsBody.angularDamping = 0; //回転に対する空気抵抗
+        sprite.physicsBody.velocity = CGVectorMake(100, 0); //速度
+        sprite.physicsBody.density = 0.1; //密度
+        sprite.physicsBody.restitution = 0; //反発力
+        sprite.physicsBody.friction = 0; //摩擦力
+        sprite.physicsBody.angularVelocity = -1;//最初から回転する
+        
+        
+        
+        //SKAction *action = [SKAction rotateByAngle:M_PI duration:0.3f];
+        
+        //[sprite runAction:[SKAction repeatActionForever:action]];
+        
+        //[self addChild:sprite];
+        
+        
+        
+        
+        
+        
+        //        NSLog(@"x = %f x = %f", location.x, location.y);
+        //        NSLog(@"button midx = %f maxx = %f midy = %f maxy = %f", CGRectGetMidX(button.frame),
+        //              CGRectGetMaxX(button.frame), CGRectGetMidY(button.frame), CGRectGetMaxY(button.frame) );
+        
+        //Jump
+        if ([button containsPoint:location]) {
+            //JumpSound
+            
+            
+            
+            
+            
+            [mario.physicsBody applyForce:CGVectorMake(0, 5000)
+                                  atPoint:CGPointMake(mario.position.x,
+                                                      mario.position.y)];
+            
+            
+            
+            
+            
+            SKAction *btnFadeOut = [SKAction fadeOutWithDuration:0.1];
+            SKAction *btnFadeIn = [SKAction fadeInWithDuration:0.1];
+            
+            
+            NSArray *action = @[btnFadeOut,
+                                btnFadeIn];
+            
+            [button runAction:[SKAction sequence:action]];
+        }
+    }
+}
+
+-(void)didBeginContact:(SKPhysicsContact *)contact{
+    NSLog(@"did begin contact");
+    NSLog(@"bodyA = %@, bodyB = %@",contact.bodyA.node.name,contact.bodyB.node.name);
+    NSLog(@"impulse = %f",contact.collisionImpulse);
+    NSLog(@"x = %f,y = %f",contact.contactPoint.x,contact.contactPoint.y);
+    
+    if (
+        [contact.bodyA.node.name isEqualToString:@"Block"]
+        &&
+        [contact.bodyB.node.name isEqualToString:@"Mario"]) {
+        
+        [self runAction:[SKAction playSoundFileNamed:@"coin.mp3" waitForCompletion:NO]];
+        
+        SKSpriteNode *coin = [SKSpriteNode spriteNodeWithImageNamed:@"apollo17.jpg"];
+        
+        coin.position = CGPointMake(150, 200);
+        coin.size = CGSizeMake(40, 40);
+
+        [self addChild:coin];
+   }
+}
+
+-(void)didEndContact:(SKPhysicsContact *)contact{
+    NSLog(@"did end contact");
+    NSLog(@"bodyA = %@, bodyB = %@",contact.bodyA.node.name,contact.bodyB.node.name);
+    NSLog(@"impulse = %f",contact.collisionImpulse);
+    NSLog(@"x = %f,y = %f",contact.contactPoint.x,contact.contactPoint.y);
+    
+}
+
+-(void)update:(CFTimeInterval)currentTime
+
+{
+    
+    
+    /* Called before each frame is rendered    */
+    
+    
+}
+
+
+@end
