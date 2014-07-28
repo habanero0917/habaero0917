@@ -1,0 +1,78 @@
+float xh = 100;
+float yh = 90;
+float xo = 400;
+float yo = 90;
+String kotoba0 = "like";
+String kotoba1 = "dislike";
+PImage pon;
+PImage honda;
+PImage pman;
+Minim minim;
+AudioPlayer player1;
+AudioSnippet player2;
+ 
+
+
+
+void setup() {
+  size(500, 500);
+  pon=loadImage("sukikirai.png");
+  honda = loadImage("original.jpg");
+  pman = loadImage("piman.jpg");
+  
+   minim = new Minim(this);
+   player1 = minim.loadFile("BGM.mp3");
+   player1.play();
+   player1.loop();
+   player2 = minim.loadSnippet("se.mp3");
+   player2.play();
+   player2.loop();
+}
+
+void draw() {
+  //background(255, 0, 0);
+  image(pon,0,0,500,200);
+  line(xh, yh, xo, yo);
+//float xf = xh + 0.2*(xo - xh)
+//float yf = yh + 0.2*(yo - yh)
+float a = map(mouseX, 0, width, 0, 1);
+float xf = xh + a*(xo - xh);
+float yf = yh + a*(yo - yh);
+ellipse(xf, yf, 10, 10);
+
+textSize(50);
+fill(0,0,0);
+text(kotoba0,60,50);
+textSize(40);
+text(kotoba1,300,50);
+}
+
+void keyPressed() {
+
+ if (keyPressed == true) {
+  if(key == 'a') {
+    image(honda,0,200,500,300);   
+  }
+  }
+ if (keyPressed == true) {
+  if(key == 's') {
+    image(pman,0,200,500,300);   
+  }
+  }
+}
+
+void mousePressed() {
+  if (mouseX > 400 ) {
+    image(pman,0,100,100,100);
+  }
+  if (mouseX < 400 ) {
+    image(pman,0,100,100,100);
+  }
+}
+
+ void stop(){
+  player1.close();
+  player2.close();
+  minim.stop();
+  super.stop();
+}
